@@ -78,8 +78,7 @@ public class MoviesHandler extends BaseHttpHandler {
             return;
         }
 
-        List<Movie> movies = store.findByYear(year);
-        sendJson(ex, 200, gson.toJson(movies));
+        sendJson(ex, 200, gson.toJson(store.findByYear(year)));
     }
 
 
