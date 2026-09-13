@@ -31,9 +31,7 @@ public abstract class BaseHttpHandler implements HttpHandler {
         // для отправки ответа без тела и кодом 204
         ex.getResponseHeaders().set("Content-Type", CT_JSON);
         ex.sendResponseHeaders(204, -1);
-
-        try (OutputStream os = ex.getResponseBody()) {
-        }
+        ex.close();
     }
 
     protected void sendError(HttpExchange ex, int status, String message) throws IOException {
