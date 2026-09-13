@@ -167,7 +167,6 @@ public class MoviesApiTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(
                 StandardCharsets.UTF_8));
         assertEquals(422, response.statusCode());
-        System.out.println(response.body());
         assertTrue(response.body().contains("Ошибка валидации"));
     }
 
