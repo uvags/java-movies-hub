@@ -51,9 +51,35 @@ public class MoviesApiTest {
                 .uri(URI.create(BASE + "/movies"))
                 .PUT(HttpRequest.BodyPublishers.noBody())
                 .build();
-        HttpResponse<String> response = client.send(
-                request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(
+                StandardCharsets.UTF_8));
         assertEquals(405, response.statusCode());
+    }
+
+    @Test
+    void deleteStatus400WhenIdNotNUmber() throws Exception {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE + "/movies/notnumber"))
+                .DELETE()
+                .build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(
+                StandardCharsets.UTF_8));
+        assertEquals(400, response.statusCode());
+        assertTrue(response.body().contains("Некорректный ID"));
+    }
+
+    @Test
+    void postStatus422WhenMovieYearLessThan1888() throws Exception {
+        String json = "{\"title\":\"Shrek\",\"year\":1887}";
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE + "/movies"))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(json, StandardCharsets.UTF_8))
+                .build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(
+                StandardCharsets.UTF_8));
+        assertEquals(422, response.statusCode());
     }
 
     @Test
@@ -78,7 +104,8 @@ public class MoviesApiTest {
                 .uri(URI.create(BASE + "/movies"))
                 .GET()
                 .build();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(
+                StandardCharsets.UTF_8));
         assertEquals(200, response.statusCode());
         assertTrue(response.body().contains("Derevanniy Bolvan"));
     }
@@ -89,9 +116,10 @@ public class MoviesApiTest {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE + "/movies"))
                 .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .POST(HttpRequest.BodyPublishers.ofString(json, StandardCharsets.UTF_8))
                 .build();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(
+                StandardCharsets.UTF_8));
         assertEquals(201, response.statusCode());
         Movie created = gson.fromJson(response.body(), Movie.class);
         assertTrue(created.getId() > 0);
@@ -106,9 +134,10 @@ public class MoviesApiTest {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE + "/movies"))
                 .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .POST(HttpRequest.BodyPublishers.ofString(json, StandardCharsets.UTF_8))
                 .build();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(
+                StandardCharsets.UTF_8));
         assertEquals(422, response.statusCode());
     }
 
@@ -119,9 +148,10 @@ public class MoviesApiTest {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE + "/movies"))
                 .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .POST(HttpRequest.BodyPublishers.ofString(json, StandardCharsets.UTF_8))
                 .build();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(
+                StandardCharsets.UTF_8));
         assertEquals(400, response.statusCode());
         assertTrue(response.body().contains("error"));
     }
@@ -132,10 +162,12 @@ public class MoviesApiTest {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE + "/movies"))
                 .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .POST(HttpRequest.BodyPublishers.ofString(json, StandardCharsets.UTF_8))
                 .build();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(
+                StandardCharsets.UTF_8));
         assertEquals(422, response.statusCode());
+        System.out.println(response.body());
         assertTrue(response.body().contains("Ошибка валидации"));
     }
 
@@ -146,9 +178,10 @@ public class MoviesApiTest {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE + "/movies"))
                 .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .POST(HttpRequest.BodyPublishers.ofString(json, StandardCharsets.UTF_8))
                 .build();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(
+                StandardCharsets.UTF_8));
         assertEquals(422, response.statusCode());
     }
 
@@ -158,9 +191,10 @@ public class MoviesApiTest {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE + "/movies"))
                 .header("Content-Type", "text/plain")
-                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .POST(HttpRequest.BodyPublishers.ofString(json, StandardCharsets.UTF_8))
                 .build();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(
+                StandardCharsets.UTF_8));
         assertEquals(415, response.statusCode());
     }
 
@@ -171,7 +205,7 @@ public class MoviesApiTest {
                 .GET()
                 .build();
         HttpResponse<String> response = client.send(
-                request, HttpResponse.BodyHandlers.ofString());
+                request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
         assertEquals(400, response.statusCode());
         assertTrue(response.body().contains("Некорректный ID"));
     }
@@ -183,7 +217,8 @@ public class MoviesApiTest {
                 .uri(URI.create(BASE + "/movies/" + movie.getId()))
                 .GET()
                 .build();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(
+                StandardCharsets.UTF_8));
         assertEquals(200, response.statusCode());
         assertTrue(response.body().contains("Shrek"));
     }
@@ -194,7 +229,8 @@ public class MoviesApiTest {
                 .uri(URI.create(BASE + "/movies/5"))
                 .GET()
                 .build();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(
+                StandardCharsets.UTF_8));
         assertEquals(404, response.statusCode());
         assertTrue(response.body().contains("Фильм не найден"));
     }
@@ -206,7 +242,8 @@ public class MoviesApiTest {
                 .uri(URI.create(BASE + "/movies/" + movie.getId()))
                 .DELETE()
                 .build();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(
+                StandardCharsets.UTF_8));
         assertEquals(204, response.statusCode());
         assertTrue(store.findById(movie.getId()).isEmpty());
     }
@@ -217,7 +254,8 @@ public class MoviesApiTest {
                 .uri(URI.create(BASE + "/movies/10"))
                 .DELETE()
                 .build();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(
+                StandardCharsets.UTF_8));
         assertEquals(404, response.statusCode());
     }
 
@@ -230,7 +268,8 @@ public class MoviesApiTest {
                 .uri(URI.create(BASE + "/movies?year=2017"))
                 .GET()
                 .build();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(
+                StandardCharsets.UTF_8));
         assertEquals(200, response.statusCode());
         assertTrue(response.body().contains("Movie"));
         assertTrue(response.body().contains("Masterpiece"));
@@ -243,7 +282,8 @@ public class MoviesApiTest {
                 .uri(URI.create(BASE + "/movies?year=2005"))
                 .GET()
                 .build();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(
+                StandardCharsets.UTF_8));
         assertEquals(200, response.statusCode());
         assertEquals("[]", response.body().trim());
     }
@@ -254,7 +294,8 @@ public class MoviesApiTest {
                 .uri(URI.create(BASE + "/movies?year=tryparsemetonumber"))
                 .GET()
                 .build();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(
+                StandardCharsets.UTF_8));
         assertEquals(400, response.statusCode());
         assertTrue(response.body().contains("error"));
     }

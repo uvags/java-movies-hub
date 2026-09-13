@@ -43,7 +43,7 @@ public abstract class BaseHttpHandler implements HttpHandler {
 
     // для ошибок валидации, где несколько полей могут быть некорректными
     protected void sendValidationError(HttpExchange ex, List<String> details) throws IOException {
-        ErrorResponse error = new ErrorResponse("Ошибка в данных", details);
+        ErrorResponse error = new ErrorResponse("Ошибка валидации", details);
         sendJson(ex, 422, gson.toJson(error));
     }
 
