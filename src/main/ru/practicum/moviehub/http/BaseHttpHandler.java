@@ -14,8 +14,6 @@ public abstract class BaseHttpHandler implements HttpHandler {
     protected final Gson gson = new Gson();
 
     protected void sendJson(HttpExchange ex, int status, String json) throws IOException {
-        // !!! Реализуйте общий для всех хендлеров метод
-        // для отправки ответа с телом в формате JSON
         byte[] body = json.getBytes(StandardCharsets.UTF_8);
 
         ex.getResponseHeaders().set("Content-Type", CT_JSON);
@@ -27,8 +25,6 @@ public abstract class BaseHttpHandler implements HttpHandler {
     }
 
     protected void sendNoContent(HttpExchange ex) throws java.io.IOException {
-        // !!! Реализуйте общий для всех хендлеров метод
-        // для отправки ответа без тела и кодом 204
         ex.getResponseHeaders().set("Content-Type", CT_JSON);
         ex.sendResponseHeaders(204, -1);
         ex.close();
